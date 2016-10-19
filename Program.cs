@@ -128,6 +128,37 @@ namespace SSH_Agent_Helper
             }
         }
 
+        static string findProgram(string name)
+        {
+            Process Where = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "C:\\Windows\\System32\\where.exe",
+                    Arguments = name,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                }
+            };
+
+            try
+            {
+                Where.Start();
+                while (!Where.StandardOutput.EndOfStream)
+                {
+                    return (string)Where.StandardOutput.ReadLine();
+                }
+                throw new Exception(name + ".exe was not found in path");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Environment.Exit(1);
+                return "";
+            }
+        }
+
         static void ManageStartup(string arguments, bool remove = false)
         {
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
