@@ -1,2 +1,18 @@
 # SSH Agent Helper
 It sets up your environment (CMD, PowerShell) for ssh-agent seamlessly
+
+## Usage
+Invoking the program without any parameters (`ssh-agent-helper.exe`) will result in running `ssh-agent.exe` and setting `SSH_AUTH_SOCK` and
+`SSH_AGENT_PID` as current user's environment variables. This will allow `ssh-add.exe`, `ssh.exe` or any other programs that consume `ssh-agent.exe`
+to conect to it without any further configuration. But you must restart CMD or PowerShell after this to take effect.
+
+It can also be configured to run `ssh-agent.exe` at the time of Windows login and add ssh keys to it. You can use `/register-startup` switch for that.
+E.g. `ssh-agent-helper.exe /register-startup /add %USERPROFILE%\.ssh\id_rsa`. And you can use `/unregister-startup` to disable run at Windows login. 
+
+You can get the usage by invoking the program with `/?` switch.
+
+## How can I contribute?
+I need a job atm, so, please contact me at my email if you can help with that.
+
+## License
+This project is covered by MIT License and the LICENSE file is included with the source code.
