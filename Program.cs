@@ -15,6 +15,34 @@ namespace SSH_Agent_Helper
         static string SSH_AGENT_PID = "SSH_AGENT_PID";
         static void Main(string[] args)
         {
+            String[] arguments = Environment.GetCommandLineArgs();
+
+            if(arguments.Length > 1)
+            {
+                if (arguments.Contains("/register-startup"))
+                {
+                    ManageStartup();
+                } else if (arguments.Contains("/unregister-startup"))
+                {
+                    ManageStartup(true);
+                } else
+                {
+                    Console.WriteLine("Usage: ssh-agent-helper.exe <switch>");
+                    Console.WriteLine("Possible switches: <command> : <description>");
+                    Console.WriteLine("--------------------------------------------");
+                    Console.WriteLine("/register-startup \"parameters for startup\":      " +
+                                        "Register this program to run at Windows Startup." +
+                                        " Parameters for");
+                    Console.WriteLine("                                                 " +
+                                        "startup are optional.");
+                    Console.WriteLine("/unregister-startup :                            " +
+                                        "Disable run at Windows Startup behaviour.");
+                    Console.WriteLine("/? :                                             Print this information.");
+                    Environment.Exit(1);
+                }
+            }
+
+
             string SSHAgentPath = findSSHAgent();
             Process SSHAgent = new Process
             {
