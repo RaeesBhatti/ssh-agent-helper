@@ -13,6 +13,9 @@ namespace SSH_Agent_Helper
     {
         static string SSH_AUTH_SOCK = "SSH_AUTH_SOCK";
         static string SSH_AGENT_PID = "SSH_AGENT_PID";
+        static string AgentSock;
+        static string AgentPID;
+
         static void Main()
         {
             String[] arguments = Environment.GetCommandLineArgs();
@@ -80,15 +83,18 @@ namespace SSH_Agent_Helper
 
                     string[] splits = line.Split(';');
                     string[] command = splits[0].Split('=');
-                    
-                    if(command[0] == SSH_AUTH_SOCK && command.Length > 1)
+
+                    if (command[0] == SSH_AUTH_SOCK && command.Length > 1)
                     {
+                        AgentSock = command[1];
                         Environment.SetEnvironmentVariable(SSH_AUTH_SOCK, command[1], EnvironmentVariableTarget.User);
-                        Console.WriteLine("set "+ SSH_AUTH_SOCK + "=" + command[1]);
-                    } else if(command[0] == SSH_AGENT_PID && command.Length > 1)
+                        Console.WriteLine("set " + SSH_AUTH_SOCK + "=" + command[1]);
+                    }
+                    else if (command[0] == SSH_AGENT_PID && command.Length > 1)
                     {
+                        AgentPID = command[1];
                         Environment.SetEnvironmentVariable(SSH_AGENT_PID, command[1], EnvironmentVariableTarget.User);
-                        Console.WriteLine("set "+ SSH_AGENT_PID + "=" + command[1]);
+                        Console.WriteLine("set " + SSH_AGENT_PID + "=" + command[1]);
                     }
                 }
             }
