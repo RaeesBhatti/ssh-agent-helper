@@ -67,7 +67,12 @@ namespace SSH_Agent_Helper
                 Environment.Exit(1);
             }
 
+            runAgent();
+            
+        }
 
+        static void runAgent()
+        {
             string SSHAgentPath = findProgram("ssh-agent");
             Process SSHAgent = new Process
             {
