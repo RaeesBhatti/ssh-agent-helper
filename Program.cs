@@ -146,5 +146,10 @@ namespace SSH_Agent_Helper
                 registryKey.DeleteValue("SSH Agent Helper");
             }
         }
+
+        static void processBuffer(object sender, DataReceivedEventArgs e)
+        {
+            Console.Write(e.Data);
+        }
     }
 }
