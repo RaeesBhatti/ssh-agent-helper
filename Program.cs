@@ -204,8 +204,8 @@ namespace SSH_Agent_Helper
             {
                 SSHAdd.Start();
 
-                SSHAdd.OutputDataReceived += processBuffer;
-                SSHAdd.ErrorDataReceived += processBuffer;
+                SSHAdd.OutputDataReceived += (sender, args) => Console.Write(args.Data);
+                SSHAdd.ErrorDataReceived += (sender, args) => Console.Write(args.Data);
 
                 SSHAdd.BeginOutputReadLine();
                 SSHAdd.BeginErrorReadLine();
@@ -216,11 +216,6 @@ namespace SSH_Agent_Helper
                 Console.WriteLine(e.Message);
                 Environment.Exit(1);
             }
-        }
-
-        static void processBuffer(object sender, DataReceivedEventArgs e)
-        {
-            Console.Write(e.Data);
         }
     }
 }
