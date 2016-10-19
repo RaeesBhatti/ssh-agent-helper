@@ -23,7 +23,7 @@ E.g. `ssh-agent-helper.exe /register-startup /add %USERPROFILE%\.ssh\id_rsa`. An
 You can get the usage by invoking the program with `/?` switch.
 
 ## How can I contribute?
-I need a job atm, so, please contact me at my email if you can help with that.
+Try to use use and report bugs if you face any. Suggest any ideas you think can make this project better.
 
 ## License
 This project is covered by MIT License and the LICENSE file is included with the source code.
