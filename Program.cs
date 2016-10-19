@@ -13,7 +13,7 @@ namespace SSH_Agent_Helper
     {
         static string SSH_AUTH_SOCK = "SSH_AUTH_SOCK";
         static string SSH_AGENT_PID = "SSH_AGENT_PID";
-        static void Main(string[] args)
+        static void Main()
         {
             String[] arguments = Environment.GetCommandLineArgs();
 
