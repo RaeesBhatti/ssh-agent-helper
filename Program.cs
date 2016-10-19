@@ -23,14 +23,14 @@ namespace SSH_Agent_Helper
                 {
                     if (arguments.Length > 2)
                     {
-                        ManageStartup(arguments.Last());
+                        manageStartup(arguments.Last());
                     } else
                     {
-                        ManageStartup("");
+                        manageStartup("");
                     }
                 } else if (arguments.Contains("/unregister-startup"))
                 {
-                    ManageStartup("", true);
+                    manageStartup("", true);
                 } else if (arguments.Contains("/add")) {
                     Console.WriteLine(arguments.Last());
                 } else
@@ -128,7 +128,7 @@ namespace SSH_Agent_Helper
             }
         }
 
-        static void ManageStartup(string arguments, bool remove = false)
+        static void manageStartup(string arguments, bool remove = false)
         {
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
