@@ -171,7 +171,7 @@ namespace SSH_Agent_Helper
             }
         }
 
-        static void addKeys(string[] paths)
+        static void addKeys(string[] paths, bool customENV = false)
         {
             string SSHAddPath = findProgram("ssh-add");
             Process SSHAdd = new Process
@@ -186,6 +186,12 @@ namespace SSH_Agent_Helper
                     CreateNoWindow = true
                 }
             };
+
+            if (customENV)
+            {
+                SSHAdd.StartInfo.EnvironmentVariables[SSH_AGENT_PID] = AgentPID;
+                SSHAdd.StartInfo.EnvironmentVariables[SSH_AUTH_SOCK] = AgentSock;
+            }
 
             try
             {
