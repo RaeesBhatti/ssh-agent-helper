@@ -32,7 +32,9 @@ namespace SSH_Agent_Helper
                 {
                     manageStartup("", true);
                 } else if (arguments.Contains("/add")) {
-                    Console.WriteLine(arguments.Last());
+                    List<string> args = new List<string>();
+                    args.Add("/add");
+                    addKeys(arguments.Skip(1).Except(args).ToArray());
                 } else
                 {
                     Console.WriteLine("Usage: ssh-agent-helper.exe <switch>");
