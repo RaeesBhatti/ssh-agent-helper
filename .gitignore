@@ -1,0 +1,6 @@
+# IDE and System files
+.vs
+
+# Build files
+bin
+obj
