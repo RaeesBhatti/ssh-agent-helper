@@ -40,10 +40,17 @@ namespace SSH_Agent_Helper
                 } else if (arguments.Contains("/unregister-startup"))
                 {
                     manageStartup(args, true);
-                } else if (arguments.Contains("/add")) {
-                    args.Add("/add");
-                    addKeys(arguments.Skip(1).Except(args).ToArray());
+                } else if (arguments.Contains("/startup") && arguments.Contains("/add"))
+                {
                     List<string> except = new List<string>();
+                    except.Add("/startup");
+                    except.Add("/add");
+                    runAgent();
+                    addKeys(arguments.Skip(1).Except(except).ToArray(), true);
+                } else if (arguments.Contains("/add")) {
+                    List<string> except = new List<string>();
+                    except.Add("/add");
+                    addKeys(arguments.Skip(1).Except(except).ToArray());
                 } else
                 {
                     Console.WriteLine("Usage: ssh-agent-helper.exe <switch>");
