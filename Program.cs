@@ -147,6 +147,40 @@ namespace SSH_Agent_Helper
             }
         }
 
+        static void addKeys(string[] paths)
+        {
+            string SSHAddPath = findProgram("ssh-add");
+            Process SSHAdd = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = SSHAddPath,
+                    UseShellExecute = false,
+                    Arguments = String.Join(" ", paths),
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                }
+            };
+
+            try
+            {
+                SSHAdd.Start();
+
+                SSHAdd.OutputDataReceived += processBuffer;
+                SSHAdd.ErrorDataReceived += processBuffer;
+
+                SSHAdd.BeginOutputReadLine();
+                SSHAdd.BeginErrorReadLine();
+                SSHAdd.WaitForExit();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Environment.Exit(1);
+            }
+        }
+
         static void processBuffer(object sender, DataReceivedEventArgs e)
         {
             Console.Write(e.Data);
