@@ -79,11 +79,11 @@ namespace SSH_Agent_Helper
                     string[] splits = line.Split(';');
                     string[] command = splits[0].Split('=');
                     
-                    if(command[0] == SSH_AUTH_SOCK)
+                    if(command[0] == SSH_AUTH_SOCK && command.Length > 1)
                     {
                         Environment.SetEnvironmentVariable(SSH_AUTH_SOCK, command[1], EnvironmentVariableTarget.User);
                         Console.WriteLine("set "+ SSH_AUTH_SOCK + "=" + command[1]);
-                    } else if(command[0] == SSH_AGENT_PID)
+                    } else if(command[0] == SSH_AGENT_PID && command.Length > 1)
                     {
                         Environment.SetEnvironmentVariable(SSH_AGENT_PID, command[1], EnvironmentVariableTarget.User);
                         Console.WriteLine("set "+ SSH_AGENT_PID + "=" + command[1]);
