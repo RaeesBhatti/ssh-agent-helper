@@ -57,7 +57,7 @@ namespace SSH_Agent_Helper
             }
 
 
-            string SSHAgentPath = findSSHAgent();
+            string SSHAgentPath = findProgram("ssh-agent");
             Process SSHAgent = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -94,37 +94,6 @@ namespace SSH_Agent_Helper
             {
                 Console.WriteLine(e.Message);
                 Environment.Exit(1);
-            }
-        }
-
-        static string findSSHAgent()
-        {
-            Process Where = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "C:\\Windows\\System32\\where.exe",
-                    Arguments = "ssh-agent",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                }
-            };
-
-            try
-            {
-                Where.Start();
-                while (!Where.StandardOutput.EndOfStream)
-                {
-                    return (string)Where.StandardOutput.ReadLine();
-                }
-                throw new Exception("ssh-agent.exe was not found in path");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Environment.Exit(1);
-                return "";
             }
         }
 
