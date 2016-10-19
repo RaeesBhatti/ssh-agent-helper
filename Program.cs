@@ -21,25 +21,39 @@ namespace SSH_Agent_Helper
             {
                 if (arguments.Contains("/register-startup"))
                 {
-                    ManageStartup();
+                    if (arguments.Length > 2)
+                    {
+                        ManageStartup(arguments.Last());
+                    } else
+                    {
+                        ManageStartup("");
+                    }
                 } else if (arguments.Contains("/unregister-startup"))
                 {
-                    ManageStartup(true);
+                    ManageStartup("", true);
+                } else if (arguments.Contains("/add")) {
+                    Console.WriteLine(arguments.Last());
                 } else
                 {
                     Console.WriteLine("Usage: ssh-agent-helper.exe <switch>");
-                    Console.WriteLine("Possible switches: <command> : <description>");
+                    Console.WriteLine("");
+                    Console.WriteLine("Possible switches:");
                     Console.WriteLine("--------------------------------------------");
-                    Console.WriteLine("/register-startup \"parameters for startup\":      " +
+                    Console.WriteLine("/register-startup \"parameters for startup\":   " +
                                         "Register this program to run at Windows Startup." +
                                         " Parameters for");
-                    Console.WriteLine("                                                 " +
-                                        "startup are optional.");
-                    Console.WriteLine("/unregister-startup :                            " +
+                    Console.WriteLine("                                              " +
+                                        "startup are optional. E.g.: ");
+                    Console.WriteLine("                                              " + 
+                                        "ssh-agent-helper.exe /register-startup \"/add %USERPROFILE%\\.ssh\\id_rsa\"");
+                    Console.WriteLine("");
+                    Console.WriteLine("/unregister-startup :                         " +
                                         "Disable run at Windows Startup behaviour.");
-                    Console.WriteLine("/? :                                             Print this information.");
-                    Environment.Exit(1);
+                    Console.WriteLine("/add \"path\" :                                 " +
+                                        "Start the ssh-agent and add the key located at \"path\" to it");
+                    Console.WriteLine("/? :                                          Print this information.");
                 }
+                Environment.Exit(1);
             }
 
 
@@ -114,14 +128,18 @@ namespace SSH_Agent_Helper
             }
         }
 
-        static void ManageStartup(bool remove = false)
+        static void ManageStartup(string arguments, bool remove = false)
         {
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             if (!remove)
             {
-                registryKey.SetValue("SSH Agent Helper", 
-                    (new Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)).LocalPath);
+                string parameter = (new Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)).LocalPath;
+                if(arguments.Length > 0)
+                {
+                    parameter = "\"" + parameter + "\" \"" + arguments + "\"";
+                }
+                registryKey.SetValue("SSH Agent Helper", parameter);
             }
             else
             {
