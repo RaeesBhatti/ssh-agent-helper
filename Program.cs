@@ -85,5 +85,20 @@ namespace SSH_Agent_Helper
                 return "";
             }
         }
+
+        static void ManageStartup(bool remove = false)
+        {
+            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
+                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            if (!remove)
+            {
+                registryKey.SetValue("SSH Agent Helper", 
+                    (new Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)).LocalPath);
+            }
+            else
+            {
+                registryKey.DeleteValue("SSH Agent Helper");
+            }
+        }
     }
 }
