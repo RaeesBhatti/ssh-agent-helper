@@ -205,7 +205,7 @@ namespace SSH_Agent_Helper
                 SSHAdd.Start();
 
                 SSHAdd.OutputDataReceived += (sender, args) => Console.Write(args.Data);
-                SSHAdd.ErrorDataReceived += (sender, args) => Console.Write(args.Data);
+                SSHAdd.ErrorDataReceived += (sender, args) => Console.Error.Write(args.Data);
 
                 SSHAdd.BeginOutputReadLine();
                 SSHAdd.BeginErrorReadLine();
