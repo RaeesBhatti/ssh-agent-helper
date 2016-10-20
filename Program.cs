@@ -129,7 +129,7 @@ namespace SSH_Agent_Helper
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "C:\\Windows\\System32\\where.exe",
+                    FileName = @"C:\Windows\System32\where.exe",
                     Arguments = name,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
@@ -157,7 +157,7 @@ namespace SSH_Agent_Helper
         static void manageStartup(string[] args, bool remove = false)
         {
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
-                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                    (@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
             if (!remove)
             {
                 string parameter = (new Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)).LocalPath;
