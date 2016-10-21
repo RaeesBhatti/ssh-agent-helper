@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
-using System.Security;
 
 namespace SSH_Agent_Helper
 {
@@ -209,58 +208,6 @@ namespace SSH_Agent_Helper
                 Console.WriteLine(e.Message);
                 Environment.Exit(1);
             }
-        }
-    }
-
-    public class SecurePassword : IDisposable
-    {
-        private readonly SecureString password;
-
-        public SecurePassword()
-        {
-            password = new SecureString();
-            ConsoleKeyInfo key;
-            do
-            {
-                key = Console.ReadKey(true);
-
-                if (key.Key == ConsoleKey.Backspace && password.Length > 0)
-                {
-                    password.RemoveAt(password.Length - 1);
-                }
-                else
-                {
-                    password.AppendChar(key.KeyChar);
-                }
-
-            } while (key.Key != ConsoleKey.Enter);
-
-            password.MakeReadOnly();
-        }
-
-        public String ConvertToUnsecure()
-        {
-            if (password == null)
-                throw new ArgumentNullException("securePassword is null");
-
-            IntPtr unmanagedString = IntPtr.Zero;
-            try
-            {
-                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(password);
-                return Marshal.PtrToStringUni(unmanagedString);
-            }
-            finally
-            {
-                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
-            }
-        }
-
-        public void Dispose()
-        {
-            if (password == null)
-                throw new ArgumentNullException("securePassword is null");
-
-            password.Dispose();
         }
     }
 }
