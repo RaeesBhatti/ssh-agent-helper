@@ -220,21 +220,10 @@ namespace SSH_Agent_Helper
                     {
                         Console.Write(procError.ToString().Trim(Environment.NewLine.ToCharArray()));
 
-                        string pass = "";
-                        while (true)
+                        using (SecurePassword phrase = new SecurePassword())
                         {
-                            var key = Console.ReadKey(true);
-                            if (key.Key != ConsoleKey.Enter)
-                            {
-                                //Console.Write("*");
-                                pass += key.KeyChar.ToString();
-                            }
-                            else
-                            {
-                                break;
-                            }
+                            SSHAdd.StandardInput.WriteLine(phrase.ConvertToUnsecure());
                         }
-                        SSHAdd.StandardInput.WriteLine(pass);
                         break;
                     }
                 }
