@@ -172,10 +172,14 @@ namespace SSH_Agent_Helper
                     parameter = "\"" + parameter + "\"" + argument;
                 }
                 registryKey.SetValue("SSH Agent Helper", parameter);
+
+                Console.WriteLine("SSH Agent Helper has been register to run at Startup with these parameters: " +
+                                    String.Join(" ", parameter));
             }
             else
             {
                 registryKey.DeleteValue("SSH Agent Helper");
+                Console.WriteLine("SSH Agent Helper registery for Startup has been removed.");
             }
         }
 
