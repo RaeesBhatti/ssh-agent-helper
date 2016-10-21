@@ -118,7 +118,7 @@ namespace SSH_Agent_Helper
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.Error.WriteLine(e.Message);
                 Environment.Exit(1);
             }
         }
@@ -148,7 +148,7 @@ namespace SSH_Agent_Helper
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.Error.WriteLine(e.Message);
                 Environment.Exit(1);
                 return "";
             }
@@ -205,7 +205,7 @@ namespace SSH_Agent_Helper
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.Error.WriteLine(e.Message);
                 Environment.Exit(1);
             }
         }
