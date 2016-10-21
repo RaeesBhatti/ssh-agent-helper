@@ -70,8 +70,9 @@ namespace SSH_Agent_Helper
                     Console.WriteLine("/add \"path\" :                                 " +
                                         "Start the ssh-agent and add the key located at \"path\" to it");
                     Console.WriteLine("/? :                                          Print this information.");
+                    Environment.Exit(1);
                 }
-                Environment.Exit(1);
+                Environment.Exit(0);
             }
 
             runAgent();
