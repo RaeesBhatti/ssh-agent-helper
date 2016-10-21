@@ -188,11 +188,7 @@ namespace SSH_Agent_Helper
                 {
                     FileName = SSHAddPath,
                     UseShellExecute = false,
-                    Arguments = String.Join(" ", paths),
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    RedirectStandardInput = true,
-                    CreateNoWindow = true
+                    Arguments = String.Join(" ", paths)
                 }
             };
 
@@ -205,28 +201,6 @@ namespace SSH_Agent_Helper
             try
             {
                 SSHAdd.Start();
-
-                StringBuilder procError = new StringBuilder();
-
-                while (!SSHAdd.StandardError.EndOfStream)
-                {
-                    char[] buffer = new char[1024];
-                    SSHAdd.StandardError.Read(buffer, 0, buffer.Length);
-
-                    procError.Append(buffer);
-
-                    //TODO: Add support for multiple tries
-                    if (procError.ToString().Contains("Enter passphrase for"))
-                    {
-                        Console.Write(procError.ToString().Trim(Environment.NewLine.ToCharArray()));
-
-                        using (SecurePassword phrase = new SecurePassword())
-                        {
-                            SSHAdd.StandardInput.WriteLine(phrase.ConvertToUnsecure());
-                        }
-                        break;
-                    }
-                }
 
                 SSHAdd.WaitForExit();
             }
