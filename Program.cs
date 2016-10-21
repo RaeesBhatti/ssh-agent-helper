@@ -190,6 +190,7 @@ namespace SSH_Agent_Helper
                     Arguments = String.Join(" ", paths),
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
+                    RedirectStandardInput = true,
                     CreateNoWindow = true
                 }
             };
@@ -204,11 +205,39 @@ namespace SSH_Agent_Helper
             {
                 SSHAdd.Start();
 
-                SSHAdd.OutputDataReceived += (sender, args) => Console.Write(args.Data);
-                SSHAdd.ErrorDataReceived += (sender, args) => Console.Error.Write(args.Data);
+                StringBuilder procError = new StringBuilder();
 
-                SSHAdd.BeginOutputReadLine();
-                SSHAdd.BeginErrorReadLine();
+                while (!SSHAdd.StandardError.EndOfStream)
+                {
+                    char[] buffer = new char[1024];
+                    SSHAdd.StandardError.Read(buffer, 0, buffer.Length);
+
+                    procError.Append(buffer);
+
+                    //TODO: Add support for multiple tries
+                    if (procError.ToString().Contains("Enter passphrase for"))
+                    {
+                        Console.Write(procError.ToString().Trim(Environment.NewLine.ToCharArray()));
+
+                        string pass = "";
+                        while (true)
+                        {
+                            var key = Console.ReadKey(true);
+                            if (key.Key != ConsoleKey.Enter)
+                            {
+                                //Console.Write("*");
+                                pass += key.KeyChar.ToString();
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        SSHAdd.StandardInput.WriteLine(pass);
+                        break;
+                    }
+                }
+
                 SSHAdd.WaitForExit();
             }
             catch (Exception e)
