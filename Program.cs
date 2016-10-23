@@ -15,6 +15,10 @@ namespace SSH_Agent_Helper
 
         static void Main()
         {
+
+            AgentSock = Environment.GetEnvironmentVariable(SSH_AUTH_SOCK, EnvironmentVariableTarget.User);
+            AgentPID = Environment.GetEnvironmentVariable(SSH_AGENT_PID, EnvironmentVariableTarget.User);
+
             String[] arguments = Environment.GetCommandLineArgs();
 
             if (arguments.Length > 1)
@@ -78,46 +82,59 @@ namespace SSH_Agent_Helper
 
         static void runAgent()
         {
-            string SSHAgentPath = findProgram("ssh-agent");
-            Process SSHAgent = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = SSHAgentPath,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                }
-            };
-
             try
             {
-                SSHAgent.Start();
-                while (!SSHAgent.StandardOutput.EndOfStream)
+                Process existingProcess = Process.GetProcessById(Convert.ToInt32(AgentPID));
+
+                if (!existingProcess.Responding)
                 {
-                    var line = SSHAgent.StandardOutput.ReadLine();
+                    throw new Exception("The previous ssh-agent is not responding");
+                }
 
-                    string[] splits = line.Split(';');
-                    string[] command = splits[0].Split('=');
-
-                    if (command[0] == SSH_AUTH_SOCK && command.Length > 1)
+                Console.Error.WriteLine("Another ssh-agent (PID: " + AgentPID + ") is already running healthily");
+            } catch (Exception exception)
+            {
+                string SSHAgentPath = findProgram("ssh-agent");
+                Process SSHAgent = new Process
+                {
+                    StartInfo = new ProcessStartInfo
                     {
-                        AgentSock = command[1];
-                        Environment.SetEnvironmentVariable(SSH_AUTH_SOCK, command[1], EnvironmentVariableTarget.User);
-                        Console.WriteLine("set " + SSH_AUTH_SOCK + "=" + command[1]);
+                        FileName = SSHAgentPath,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
                     }
-                    else if (command[0] == SSH_AGENT_PID && command.Length > 1)
+                };
+
+                try
+                {
+                    SSHAgent.Start();
+                    while (!SSHAgent.StandardOutput.EndOfStream)
                     {
-                        AgentPID = command[1];
-                        Environment.SetEnvironmentVariable(SSH_AGENT_PID, command[1], EnvironmentVariableTarget.User);
-                        Console.WriteLine("set " + SSH_AGENT_PID + "=" + command[1]);
+                        var line = SSHAgent.StandardOutput.ReadLine();
+
+                        string[] splits = line.Split(';');
+                        string[] command = splits[0].Split('=');
+
+                        if (command[0] == SSH_AUTH_SOCK && command.Length > 1)
+                        {
+                            AgentSock = command[1];
+                            Environment.SetEnvironmentVariable(SSH_AUTH_SOCK, command[1], EnvironmentVariableTarget.User);
+                            Console.WriteLine("set " + SSH_AUTH_SOCK + "=" + command[1]);
+                        }
+                        else if (command[0] == SSH_AGENT_PID && command.Length > 1)
+                        {
+                            AgentPID = command[1];
+                            Environment.SetEnvironmentVariable(SSH_AGENT_PID, command[1], EnvironmentVariableTarget.User);
+                            Console.WriteLine("set " + SSH_AGENT_PID + "=" + command[1]);
+                        }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine(e.Message);
-                Environment.Exit(1);
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine(e.Message);
+                    Environment.Exit(1);
+                }
             }
         }
 
