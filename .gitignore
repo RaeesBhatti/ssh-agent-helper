@@ -1,6 +1,7 @@
 # IDE and System files
 .vs
 
-# Build files
+# Build and package files
 bin
 obj
+packages
