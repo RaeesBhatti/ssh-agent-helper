@@ -35,34 +35,38 @@ namespace SSH_Agent_Helper
                 AgentPID = AgentPID = Environment.GetEnvironmentVariable(SSH_AGENT_PID, EnvironmentVariableTarget.User);
             }
 
-            String[] arguments = Environment.GetCommandLineArgs();
             var options = new Options();
 
             if (CommandLine.Parser.Default.ParseArguments(args, options) && args.Length > 0)
             {
-                string[] switches = { };
                 if (options.Kill)
                 {
-                    killAgent();
-                } else if (options.RegisterStartup)
+                    KillSSHAgent();
+                }
+                else if (options.RegisterStartup)
                 {
                     if (options.Others.Count > 0)
                     {
                         options.Others.Add("-s");
-                        manageStartup(options.Others);
-                    } else
-                    {
-                        manageStartup(new List<string>() { });
+                        RegisterStartup(options.Others);
                     }
-                } else if (options.UnregisterRestartup)
+                    else
+                    {
+                        RegisterStartup(new List<string>() { });
+                    }
+                }
+                else if (options.UnregisterRestartup)
                 {
-                    manageStartup(switches, true);
-                } else if (options.Startup && options.Add)
+                    UnregisterStartup();
+                }
+                else if (options.Startup && options.Add)
                 {
-                    runAgent();
-                    addKeys(options.Others, true);
-                } else if (options.Add) {
-                    addKeys(options.Others);
+                    RunSSHAgent();
+                    AddSSHKeys(options.Others, true);
+                }
+                else if (options.Add)
+                {
+                    AddSSHKeys(options.Others);
                 }
                 else
                 {
@@ -70,13 +74,13 @@ namespace SSH_Agent_Helper
                     Environment.Exit(1);
                 }
                 Environment.Exit(0);
+            } else if (args.Length == 0)
+            {
+                RunSSHAgent();
             }
-
-            runAgent();
-
         }
 
-        static void runAgent()
+        static void RunSSHAgent()
         {
             try
             {
@@ -88,9 +92,9 @@ namespace SSH_Agent_Helper
                 }
 
                 Console.Error.WriteLine("Another ssh-agent (PID: " + AgentPID + ") is already running healthily");
-            } catch (Exception exception)
+            } catch (Exception)
             {
-                string SSHAgentPath = findProgram("ssh-agent");
+                string SSHAgentPath = FindProgram("ssh-agent");
                 Process SSHAgent = new Process
                 {
                     StartInfo = new ProcessStartInfo
@@ -150,7 +154,7 @@ namespace SSH_Agent_Helper
             }
         }
 
-        static void killAgent()
+        static void KillSSHAgent()
         {
             if(String.IsNullOrEmpty(AgentPID))
             {
@@ -158,7 +162,7 @@ namespace SSH_Agent_Helper
                 Environment.Exit(1);
             }
 
-            string SSHAgentPath = findProgram("ssh-agent");
+            string SSHAgentPath = FindProgram("ssh-agent");
             Process SSHAgent = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -202,7 +206,7 @@ namespace SSH_Agent_Helper
             }
         }
 
-        static string findProgram(string name)
+        static string FindProgram(string name)
         {
             Process Where = new Process
             {
@@ -233,7 +237,17 @@ namespace SSH_Agent_Helper
             }
         }
 
-        static void manageStartup(IList<string> args, bool remove = false)
+        static void RegisterStartup(IList<string> args)
+        {
+            manageStartup(args);
+        }
+
+        static void UnregisterStartup()
+        {
+            manageStartup(new List<string>() { }, true);
+        }
+
+        private static void manageStartup(IList<string> args, bool remove = false)
         {
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
                     (@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
@@ -255,9 +269,9 @@ namespace SSH_Agent_Helper
             }
         }
 
-        static void addKeys(IList<string> paths, bool customENV = false)
+        static void AddSSHKeys(IList<string> paths, bool customENV = false)
         {
-            string SSHAddPath = findProgram("ssh-add");
+            string SSHAddPath = FindProgram("ssh-add");
             Process SSHAdd = new Process
             {
                 StartInfo = new ProcessStartInfo
