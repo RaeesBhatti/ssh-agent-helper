@@ -60,23 +60,23 @@ namespace SSH_Agent_Helper
                     addKeys(arguments.Skip(1).Except(except).ToArray());
                 } else
                 {
-                    Console.WriteLine("Usage: ssh-agent-helper.exe <switch>");
-                    Console.WriteLine("");
-                    Console.WriteLine("Possible switches:");
-                    Console.WriteLine("--------------------------------------------");
-                    Console.WriteLine("/register-startup \"parameters for startup\":   " +
+                    Console.Error.WriteLine("Usage: ssh-agent-helper.exe <switch>");
+                    Console.Error.WriteLine("");
+                    Console.Error.WriteLine("Possible switches:");
+                    Console.Error.WriteLine("--------------------------------------------");
+                    Console.Error.WriteLine("/register-startup \"parameters for startup\":   " +
                                         "Register this program to run at Windows Startup." +
                                         " Parameters for");
-                    Console.WriteLine("                                              " +
+                    Console.Error.WriteLine("                                              " +
                                         "startup are optional. E.g.: ");
-                    Console.WriteLine("                                              " +
+                    Console.Error.WriteLine("                                              " +
                                         "ssh-agent-helper.exe /register-startup /add %USERPROFILE%\\.ssh\\id_rsa");
-                    Console.WriteLine("");
-                    Console.WriteLine("/unregister-startup :                         " +
+                    Console.Error.WriteLine("");
+                    Console.Error.WriteLine("/unregister-startup :                         " +
                                         "Disable run at Windows Startup behaviour.");
-                    Console.WriteLine("/add \"path\" :                                 " +
+                    Console.Error.WriteLine("/add \"path\" :                                 " +
                                         "Start the ssh-agent and add the key located at \"path\" to it");
-                    Console.WriteLine("/? :                                          Print this information.");
+                    Console.Error.WriteLine("/? :                                          Print this information.");
                     Environment.Exit(1);
                 }
                 Environment.Exit(0);
