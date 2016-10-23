@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using CommandLine;
+using CommandLine.Text;
+using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
@@ -408,6 +410,43 @@ namespace SSH_Agent_Helper
 
             [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success), DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
             private static extern bool CloseHandle(IntPtr handle);
+        }
+    }
+
+    class Options
+    {
+        [Option('r', "register-startup", Required = false,
+            HelpText = "Register this program to run at Windows Startup. Parameters for startup are optional. " +
+                       "E.g.: ssh-agent-helper -r -a %USERPROFILE%\\.ssh\\id_rsa")]
+        public bool RegisterStartup { get; set; }
+
+        [Option('u', "unregister-startup", Required = false,
+            HelpText = "Disable run at Windows Startup behaviour.")]
+        public bool UnregisterRestartup { get; set; }
+
+        [Option('k', "kill", Required = false,
+            HelpText = "Kill the current ssh-agent process and unset environment variables.")]
+        public bool Kill { get; set; }
+
+        [Option('s', "startup", Required = false,
+            HelpText = "Option added to arguments when registering for Windows Startup.")]
+        public bool Startup { get; set; }
+
+        [Option('a', "add", Required = false,
+            HelpText = "Adds key to ssh-agent. Useful for startup configuration.")]
+        public bool Add { get; set; }
+
+        [ValueList(typeof(List<string>))]
+        public IList<string> Others { get; set; }
+
+        [ParserState]
+        public IParserState LastParserState { get; set; }
+
+        [HelpOption]
+        public string GetUsage()
+        {
+            return HelpText.AutoBuild(this,
+              (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current));
         }
     }
 }
