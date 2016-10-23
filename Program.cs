@@ -39,7 +39,19 @@ namespace SSH_Agent_Helper
 
             if (CommandLine.Parser.Default.ParseArguments(args, options) && args.Length > 0)
             {
-                if (options.Kill)
+                if (options.Test)
+                {
+                    bool alive = TestSSHAgent();
+                    if (alive)
+                    {
+                        Console.WriteLine(alive);
+                    }
+                    else
+                    {
+                        Console.Error.WriteLine(alive);
+                    }
+                }
+                else if (options.Kill)
                 {
                     KillSSHAgent();
                 }
@@ -446,6 +458,10 @@ namespace SSH_Agent_Helper
         [Option('u', "unregister-startup", Required = false,
             HelpText = "Disable run at Windows Startup behaviour.")]
         public bool UnregisterRestartup { get; set; }
+
+        [Option('t', "test", Required = false,
+            HelpText = "Test if configured ssh-agent is alive and responding. Useful for checking programatically.")]
+        public bool Test { get; set; }
 
         [Option('k', "kill", Required = false,
             HelpText = "Kill the current ssh-agent process and unset environment variables.")]
