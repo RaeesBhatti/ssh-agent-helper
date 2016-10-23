@@ -22,8 +22,16 @@ namespace SSH_Agent_Helper
         static void Main()
         {
 
-            AgentSock = Environment.GetEnvironmentVariable(SSH_AUTH_SOCK, EnvironmentVariableTarget.User);
-            AgentPID = Environment.GetEnvironmentVariable(SSH_AGENT_PID, EnvironmentVariableTarget.User);
+            AgentSock = Environment.GetEnvironmentVariable(SSH_AUTH_SOCK, EnvironmentVariableTarget.Process);
+            AgentPID = Environment.GetEnvironmentVariable(SSH_AGENT_PID, EnvironmentVariableTarget.Process);
+            if (String.IsNullOrEmpty(AgentSock))
+            {
+                AgentSock = Environment.GetEnvironmentVariable(SSH_AUTH_SOCK, EnvironmentVariableTarget.User);
+            }
+            if (String.IsNullOrEmpty(AgentPID))
+            {
+                AgentPID = AgentPID = Environment.GetEnvironmentVariable(SSH_AGENT_PID, EnvironmentVariableTarget.User);
+            }
 
             String[] arguments = Environment.GetCommandLineArgs();
 
