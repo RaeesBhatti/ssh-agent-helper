@@ -175,7 +175,7 @@ namespace SSH_Agent_Helper
         {
             if(String.IsNullOrEmpty(AgentPID) || Process.GetProcessById(Convert.ToInt32(AgentPID)).Id < 1)
             {
-                Console.Error.WriteLine("The environment is currently not configured for ssh-agent or it " +
+                Console.Error.WriteLine("Either the environment is currently not configured for ssh-agent or it " +
                                         "has already been killed.");
                 Environment.Exit(1);
             }
