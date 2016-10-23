@@ -138,22 +138,29 @@ namespace SSH_Agent_Helper
                             AgentPID = command[1];
                             Environment.SetEnvironmentVariable(SSH_AGENT_PID, command[1], EnvironmentVariableTarget.User);
                         }
+
+                        if (parent.ProcessName != "cmd" && parent.ProcessName != "powershell")
+                        {
+                            Console.WriteLine(line);
+                        }
                     }
 
                     if (parent.ProcessName == "powershell")
                     {
                         Console.WriteLine("$env:" + SSH_AUTH_SOCK + "=\"" + AgentSock + "\"");
                         Console.WriteLine("$env:" + SSH_AGENT_PID + "=\"" + AgentPID + "\"");
+
+                        Console.WriteLine("# Your environment has been configured. " +
+                                          "Run these commands to configure current terminal or open a new one.");
                     }
-                    else
+                    else if (parent.ProcessName == "cmd")
                     {
                         Console.WriteLine("set " + SSH_AUTH_SOCK + "=" + AgentSock);
                         Console.WriteLine("set " + SSH_AGENT_PID + "=" + AgentPID);
-                    }
 
-                    Console.WriteLine((parent.ProcessName == "powershell" ? "# " : "rem ") +
-                                          "Your environment has been configured. " +
+                        Console.WriteLine("rem Your environment has been configured. " +
                                           "Run these commands to configure current terminal or open a new one.");
+                    }
                 }
                 catch (Exception e)
                 {
@@ -206,16 +213,24 @@ namespace SSH_Agent_Helper
                 {
                     Console.WriteLine("Remove-Item env:" + SSH_AUTH_SOCK);
                     Console.WriteLine("Remove-Item env:" + SSH_AGENT_PID);
+
+                    Console.WriteLine("# ssh-agent has been killed and your environment has been configured. " +
+                                      "Run these commands to configure current terminal or open a new one.");
                 }
-                else
+                else if (parent.ProcessName == "cmd")
                 {
                     Console.WriteLine("set " + SSH_AUTH_SOCK + "=");
                     Console.WriteLine("set " + SSH_AGENT_PID + "=");
-                }
 
-                Console.WriteLine((parent.ProcessName == "powershell" ? "# " : "rem ") +
-                                      "ssh-agent has been killed and your environment has been configured. " +
+                    Console.WriteLine("rem ssh-agent has been killed and your environment has been configured. " +
                                       "Run these commands to configure current terminal or open a new one.");
+                } else
+                {
+                    while (!SSHAgent.StandardOutput.EndOfStream)
+                    {
+                        Console.WriteLine(SSHAgent.StandardOutput.ReadLine());
+                    }
+                }
             }
             catch (Exception e)
             {
