@@ -20,7 +20,7 @@ It can also be configured to run `ssh-agent` at the time of Windows startup and 
 E.g. `ssh-agent-helper.exe -r -a %USERPROFILE%\.ssh\id_rsa`. And you can use `--unregister-startup` or `-u`
 to disable run at Windows startup.
 
-You can get the usage by invoking the program with `--help` switch.
+You can get the usage information by invoking the program with `--help` switch.
 
 ## How can I contribute?
 Try to use use and report bugs if you face any. Suggest any ideas you think can make this project better.
