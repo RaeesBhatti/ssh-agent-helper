@@ -9,16 +9,16 @@ Windows environment. Which means that you can use your precious `ssh` and `git` 
 or PowerShell.
 
 ## Usage
-Invoking the program without any parameters (`ssh-agent-helper.exe`) will result in running `ssh-agent.exe`
+Invoking the program without any parameters (`ssh-agent-helper.exe`) will result in running `ssh-agent`
 and setting `SSH_AUTH_SOCK` and `SSH_AGENT_PID` as current user's environment variables. This will allow
-`ssh-add.exe`, `ssh.exe` or any other programs that consume `ssh-agent.exe` to conect to it without any further
+`ssh-add`, `ssh` or any other programs that consume `ssh-agent` to conect to it without any further
 configuration. But you must restart Command Prompt or PowerShell after this to take effect.
 
-It can also be configured to run `ssh-agent.exe` at the time of Windows login and add ssh keys to it. You can use
+It can also be configured to run `ssh-agent` at the time of Windows startup and add ssh keys to it. You can use
 `--register-startup` or `-r` switch for that.
 
-E.g. `ssh-agent-helper.exe -r -a %USERPROFILE%\.ssh\id_rsa`. And you can use
-`--unregister-startup` or `-u` to disable run at Windows login.
+E.g. `ssh-agent-helper.exe -r -a %USERPROFILE%\.ssh\id_rsa`. And you can use `--unregister-startup` or `-u`
+to disable run at Windows startup.
 
 You can get the usage by invoking the program with `--help` switch.
 
