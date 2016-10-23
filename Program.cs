@@ -17,7 +17,7 @@ namespace SSH_Agent_Helper
         {
             String[] arguments = Environment.GetCommandLineArgs();
 
-            if(arguments.Length > 1)
+            if (arguments.Length > 1)
             {
                 string[] args = {};
                 if (arguments.Contains("/register-startup"))
