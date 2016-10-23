@@ -105,9 +105,9 @@ namespace SSH_Agent_Helper
             {
                 Process existingProcess = Process.GetProcessById(Convert.ToInt32(AgentPID));
 
-                if (!existingProcess.Responding)
+                if (!existingProcess.Responding || Convert.ToInt32(AgentPID) < 1)
                 {
-                    throw new Exception("The previous ssh-agent is not responding");
+                    throw new Exception("There is no process running or the previous ssh-agent is not responding.");
                 }
 
                 Console.Error.WriteLine("Another ssh-agent (PID: " + AgentPID + ") is already running healthily");
