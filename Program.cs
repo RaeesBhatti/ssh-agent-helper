@@ -102,6 +102,7 @@ namespace SSH_Agent_Helper
                         FileName = SSHAgentPath,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
+                        RedirectStandardError = true,
                         CreateNoWindow = true
                     }
                 };
@@ -111,6 +112,14 @@ namespace SSH_Agent_Helper
                     SSHAgent.Start();
 
                     Process parent = FindParent.ParentProcess(Process.GetCurrentProcess());
+
+                    if (!SSHAgent.StandardError.EndOfStream)
+                    {
+                        while (!SSHAgent.StandardError.EndOfStream)
+                        {
+                            Console.Error.WriteLine(SSHAgent.StandardError.ReadLine());
+                        }
+                    }
 
                     while (!SSHAgent.StandardOutput.EndOfStream)
                     {
@@ -170,6 +179,7 @@ namespace SSH_Agent_Helper
                     FileName = SSHAgentPath,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                     CreateNoWindow = true,
                     Arguments = "-k",
                 }
@@ -183,6 +193,14 @@ namespace SSH_Agent_Helper
                 Environment.SetEnvironmentVariable(SSH_AUTH_SOCK, null, EnvironmentVariableTarget.User);
 
                 Process parent = FindParent.ParentProcess(Process.GetCurrentProcess());
+
+                if (!SSHAgent.StandardError.EndOfStream)
+                {
+                    while (!SSHAgent.StandardError.EndOfStream)
+                    {
+                        Console.Error.WriteLine(SSHAgent.StandardError.ReadLine());
+                    }
+                }
 
                 if (parent.ProcessName == "powershell")
                 {
