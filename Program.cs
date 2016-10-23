@@ -30,7 +30,7 @@ namespace SSH_Agent_Helper
             {
                 AgentSock = Environment.GetEnvironmentVariable(SSH_AUTH_SOCK, EnvironmentVariableTarget.User);
             }
-            if (String.IsNullOrEmpty(AgentPID))
+            if (String.IsNullOrEmpty(AgentPID) || Process.GetProcessById(Convert.ToInt32(AgentPID)).Id < 1)
             {
                 AgentPID = Environment.GetEnvironmentVariable(SSH_AGENT_PID, EnvironmentVariableTarget.User);
             }
@@ -173,9 +173,10 @@ namespace SSH_Agent_Helper
 
         static void KillSSHAgent()
         {
-            if(String.IsNullOrEmpty(AgentPID))
+            if(String.IsNullOrEmpty(AgentPID) || Process.GetProcessById(Convert.ToInt32(AgentPID)).Id < 1)
             {
-                Console.Error.WriteLine("The environment is currently not configured for an ssh-agent. So, can't kill any.");
+                Console.Error.WriteLine("The environment is currently not configured for ssh-agent or it " +
+                                        "has already been killed.");
                 Environment.Exit(1);
             }
 
@@ -192,6 +193,8 @@ namespace SSH_Agent_Helper
                     Arguments = "-k",
                 }
             };
+
+            SSHAgent.StartInfo.EnvironmentVariables[SSH_AGENT_PID] = AgentPID;
 
             try
             {
