@@ -36,7 +36,7 @@ namespace SSH_Agent_Helper
             {
                 existingProcess = Process.GetProcessById(Convert.ToInt32(AgentPID));
             } catch (Exception) {}
-            if (String.IsNullOrEmpty(AgentPID) || (existingProcess != null && existingProcess.Id < 1))
+            if (String.IsNullOrEmpty(AgentPID) || existingProcess == null || existingProcess.Id < 1)
             {
                 AgentPID = Environment.GetEnvironmentVariable(SSH_AGENT_PID, EnvironmentVariableTarget.User);
             }
@@ -201,7 +201,7 @@ namespace SSH_Agent_Helper
                 existingProcess = Process.GetProcessById(Convert.ToInt32(AgentPID));
             }
             catch (Exception) { }
-            if (String.IsNullOrEmpty(AgentPID) || (existingProcess != null && existingProcess.Id < 1))
+            if (String.IsNullOrEmpty(AgentPID) || existingProcess == null || existingProcess.Id < 1)
             {
                 Console.Error.WriteLine("Either the environment is currently not configured for ssh-agent or it " +
                                         "has already been killed.");
@@ -284,7 +284,7 @@ namespace SSH_Agent_Helper
             }
             catch (Exception) { }
 
-            return !(String.IsNullOrEmpty(AgentPID) || (existingProcess != null && existingProcess.Id < 1));
+            return !(String.IsNullOrEmpty(AgentPID) || existingProcess == null || existingProcess.Id < 1);
         }
 
         static string FindProgram(string name)
