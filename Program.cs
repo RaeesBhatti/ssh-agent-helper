@@ -253,11 +253,12 @@ namespace SSH_Agent_Helper
                     (@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
             if (!remove)
             {
-                string parameter = (new Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)).LocalPath;
-                registryKey.SetValue("SSH Agent Helper", parameter + " " + String.Join(" ", args));
+                string parameters = (new Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)).LocalPath;
+                       parameters = parameters + " " + String.Join(" ", args);
+                registryKey.SetValue("SSH Agent Helper", parameters);
 
                 Console.WriteLine("SSH Agent Helper has been register to run at Startup with these parameters: " +
-                                    String.Join(" ", parameter));
+                                    String.Join(" ", parameters));
             } else if (registryKey.GetValue("SSH Agent Helper") != null)
             {
                 registryKey.DeleteValue("SSH Agent Helper");
