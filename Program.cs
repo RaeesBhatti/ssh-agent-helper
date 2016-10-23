@@ -410,7 +410,7 @@ namespace SSH_Agent_Helper
         public bool Kill { get; set; }
 
         [Option('s', "startup", Required = false,
-            HelpText = "Option added to arguments when registering for Windows Startup.")]
+            HelpText = "Used to incdicate startup, so that, ssh-agent can be started before adding keys.")]
         public bool Startup { get; set; }
 
         [Option('a', "add", Required = false,
