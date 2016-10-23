@@ -142,7 +142,7 @@ namespace SSH_Agent_Helper
                     }
                     Console.WriteLine((parent.ProcessName == "powershell" ? "# " : "rem ") +
                                           "Your environment has been configured. " +
-                                          "Run these commands to configure current terminal.");
+                                          "Run these commands to configure current terminal or open a new one.");
                 }
                 catch (Exception e)
                 {
