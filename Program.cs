@@ -243,6 +243,11 @@ namespace SSH_Agent_Helper
             }
         }
 
+        static bool TestSSHAgent()
+        {
+            return !(String.IsNullOrEmpty(AgentPID) || Process.GetProcessById(Convert.ToInt32(AgentPID)).Id < 1);
+        }
+
         static string FindProgram(string name)
         {
             Process Where = new Process
