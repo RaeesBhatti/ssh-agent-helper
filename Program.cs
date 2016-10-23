@@ -29,7 +29,7 @@ namespace SSH_Agent_Helper
 
             if (arguments.Length > 1)
             {
-                string[] args = { };
+                string[] switches = { };
                 if (arguments.Contains("/register-startup"))
                 {
                     if (arguments.Length > 2)
@@ -42,11 +42,11 @@ namespace SSH_Agent_Helper
                         manageStartup(arguments.Skip(1).Except(except).ToArray());
                     } else
                     {
-                        manageStartup(args);
+                        manageStartup(switches);
                     }
                 } else if (arguments.Contains("/unregister-startup"))
                 {
-                    manageStartup(args, true);
+                    manageStartup(switches, true);
                 } else if (arguments.Contains("/startup") && arguments.Contains("/add"))
                 {
                     List<string> except = new List<string>();
