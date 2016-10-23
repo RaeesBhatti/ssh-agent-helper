@@ -45,8 +45,9 @@ namespace SSH_Agent_Helper
                 }
                 else if (options.RegisterStartup)
                 {
-                    if (options.Others.Count > 0)
+                    if (options.Add && options.Others.Count > 0)
                     {
+                        options.Others.Add("-a");
                         options.Others.Add("-s");
                         RegisterStartup(options.Others);
                     }
