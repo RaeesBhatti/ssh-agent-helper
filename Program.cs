@@ -168,6 +168,58 @@ namespace SSH_Agent_Helper
             }
         }
 
+        static void killAgent()
+        {
+            if(String.IsNullOrEmpty(AgentPID))
+            {
+                Console.Error.WriteLine("The environment is currently not configured for an ssh-agent. So, can't kill any.");
+                Environment.Exit(1);
+            }
+
+            string SSHAgentPath = findProgram("ssh-agent");
+            Process SSHAgent = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = SSHAgentPath,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true,
+                    Arguments = "-k",
+                }
+            };
+
+            try
+            {
+                SSHAgent.Start();
+
+                Environment.SetEnvironmentVariable(SSH_AGENT_PID, null, EnvironmentVariableTarget.User);
+                Environment.SetEnvironmentVariable(SSH_AUTH_SOCK, null, EnvironmentVariableTarget.User);
+
+                Process parent = FindParent.ParentProcess(Process.GetCurrentProcess());
+
+                if (parent.ProcessName == "powershell")
+                {
+                    Console.WriteLine("Remove-Item env:" + SSH_AUTH_SOCK);
+                    Console.WriteLine("Remove-Item env:" + SSH_AGENT_PID);
+                }
+                else
+                {
+                    Console.WriteLine("set " + SSH_AUTH_SOCK + "=");
+                    Console.WriteLine("set " + SSH_AGENT_PID + "=");
+                }
+
+                Console.WriteLine((parent.ProcessName == "powershell" ? "# " : "rem ") +
+                                      "ssh-agent has been killed and your environment has been configured. " +
+                                      "Run these commands to configure current terminal or open a new one.");
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e.Message);
+                Environment.Exit(1);
+            }
+        }
+
         static string findProgram(string name)
         {
             Process Where = new Process
