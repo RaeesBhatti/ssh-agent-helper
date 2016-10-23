@@ -38,7 +38,10 @@ namespace SSH_Agent_Helper
             if (arguments.Length > 1)
             {
                 string[] switches = { };
-                if (arguments.Contains("/register-startup"))
+                if (arguments.Contains("/k"))
+                {
+                    killAgent();
+                } else if (arguments.Contains("/register-startup"))
                 {
                     if (arguments.Length > 2)
                     {
@@ -84,6 +87,8 @@ namespace SSH_Agent_Helper
                                         "Disable run at Windows Startup behaviour.");
                     Console.Error.WriteLine("/add \"path\" :                                 " +
                                         "Start the ssh-agent and add the key located at \"path\" to it");
+                    Console.Error.WriteLine("/k :                                          " +
+                                        "Kill the current ssh-agent process and unset environment variables.");
                     Console.Error.WriteLine("/? :                                          Print this information.");
                     Environment.Exit(1);
                 }
