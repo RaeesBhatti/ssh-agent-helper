@@ -266,7 +266,7 @@ namespace SSH_Agent_Helper
             }
             else
             {
-                Console.WriteLine("SSH Agent Helper registery for has already been removed.");
+                Console.WriteLine("SSH Agent Helper registery has already been removed.");
             }
         }
 
