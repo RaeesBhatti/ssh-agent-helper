@@ -32,7 +32,7 @@ namespace SSH_Agent_Helper
             }
             if (String.IsNullOrEmpty(AgentPID))
             {
-                AgentPID = AgentPID = Environment.GetEnvironmentVariable(SSH_AGENT_PID, EnvironmentVariableTarget.User);
+                AgentPID = Environment.GetEnvironmentVariable(SSH_AGENT_PID, EnvironmentVariableTarget.User);
             }
 
             var options = new Options();
