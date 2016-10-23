@@ -173,6 +173,10 @@ namespace SSH_Agent_Helper
 
                         Console.WriteLine("rem Your environment has been configured. " +
                                           "Run these commands to configure current terminal or open a new one.");
+                    } else
+                    {
+                        Console.WriteLine("# Your environment has been configured. " +
+                                          "Run these commands to configure current terminal or open a new one.");
                     }
                 }
                 catch (Exception e)
@@ -245,6 +249,10 @@ namespace SSH_Agent_Helper
                     while (!SSHAgent.StandardOutput.EndOfStream)
                     {
                         Console.WriteLine(SSHAgent.StandardOutput.ReadLine());
+                    }
+                    {
+                        Console.WriteLine("# ssh-agent has been killed and your environment has been configured. " +
+                                          "Run these commands to configure current terminal or open a new one.");
                     }
                 }
             }
