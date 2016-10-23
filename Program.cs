@@ -23,7 +23,7 @@ namespace SSH_Agent_Helper
 
             if (arguments.Length > 1)
             {
-                string[] args = {};
+                string[] args = { };
                 if (arguments.Contains("/register-startup"))
                 {
                     if (arguments.Length > 2)
@@ -77,7 +77,7 @@ namespace SSH_Agent_Helper
             }
 
             runAgent();
-            
+
         }
 
         static void runAgent()
@@ -176,9 +176,9 @@ namespace SSH_Agent_Helper
             if (!remove)
             {
                 string parameter = (new Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)).LocalPath;
-                if(args.Length > 0)
+                if (args.Length > 0)
                 {
-                    
+
                     string argument = "";
                     for (int i = 0; i < args.Length; i++) {
                         argument += " \"" + args[i] + "\"";
