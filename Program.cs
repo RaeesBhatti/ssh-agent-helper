@@ -30,7 +30,13 @@ namespace SSH_Agent_Helper
             {
                 AgentSock = Environment.GetEnvironmentVariable(SSH_AUTH_SOCK, EnvironmentVariableTarget.User);
             }
-            if (String.IsNullOrEmpty(AgentPID) || Process.GetProcessById(Convert.ToInt32(AgentPID)).Id < 1)
+
+            Process existingProcess = null;
+            try
+            {
+                existingProcess = Process.GetProcessById(Convert.ToInt32(AgentPID));
+            } catch (Exception) {}
+            if (String.IsNullOrEmpty(AgentPID) || (existingProcess != null && existingProcess.Id < 1))
             {
                 AgentPID = Environment.GetEnvironmentVariable(SSH_AGENT_PID, EnvironmentVariableTarget.User);
             }
@@ -189,7 +195,13 @@ namespace SSH_Agent_Helper
 
         static void KillSSHAgent()
         {
-            if(String.IsNullOrEmpty(AgentPID) || Process.GetProcessById(Convert.ToInt32(AgentPID)).Id < 1)
+            Process existingProcess = null;
+            try
+            {
+                existingProcess = Process.GetProcessById(Convert.ToInt32(AgentPID));
+            }
+            catch (Exception) { }
+            if (String.IsNullOrEmpty(AgentPID) || (existingProcess != null && existingProcess.Id < 1))
             {
                 Console.Error.WriteLine("Either the environment is currently not configured for ssh-agent or it " +
                                         "has already been killed.");
@@ -265,7 +277,14 @@ namespace SSH_Agent_Helper
 
         static bool TestSSHAgent()
         {
-            return !(String.IsNullOrEmpty(AgentPID) || Process.GetProcessById(Convert.ToInt32(AgentPID)).Id < 1);
+            Process existingProcess = null;
+            try
+            {
+                existingProcess = Process.GetProcessById(Convert.ToInt32(AgentPID));
+            }
+            catch (Exception) { }
+
+            return !(String.IsNullOrEmpty(AgentPID) || (existingProcess != null && existingProcess.Id < 1));
         }
 
         static string FindProgram(string name)
