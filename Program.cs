@@ -115,6 +115,9 @@ namespace SSH_Agent_Helper
                 try
                 {
                     SSHAgent.Start();
+
+                    Process parent = FindParent.ParentProcess(Process.GetCurrentProcess());
+
                     while (!SSHAgent.StandardOutput.EndOfStream)
                     {
                         var line = SSHAgent.StandardOutput.ReadLine();
@@ -126,15 +129,20 @@ namespace SSH_Agent_Helper
                         {
                             AgentSock = command[1];
                             Environment.SetEnvironmentVariable(SSH_AUTH_SOCK, command[1], EnvironmentVariableTarget.User);
-                            Console.WriteLine("set " + SSH_AUTH_SOCK + "=" + command[1]);
+                            Console.WriteLine(
+                                (parent.ProcessName == "powershell" ? "$env:" : "set ") + SSH_AUTH_SOCK + "=\"" + command[1] + "\";");
                         }
                         else if (command[0] == SSH_AGENT_PID && command.Length > 1)
                         {
                             AgentPID = command[1];
                             Environment.SetEnvironmentVariable(SSH_AGENT_PID, command[1], EnvironmentVariableTarget.User);
-                            Console.WriteLine("set " + SSH_AGENT_PID + "=" + command[1]);
+                            Console.WriteLine(
+                                (parent.ProcessName == "powershell" ? "$env:" : "set ") + SSH_AGENT_PID + "=\"" + command[1] + "\";");
                         }
                     }
+                    Console.WriteLine((parent.ProcessName == "powershell" ? "# " : "rem ") +
+                                          "Your environment has been configured. " +
+                                          "Run these commands to configure current terminal.");
                 }
                 catch (Exception e)
                 {
