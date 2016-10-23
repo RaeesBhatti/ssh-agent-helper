@@ -15,12 +15,12 @@ and setting `SSH_AUTH_SOCK` and `SSH_AGENT_PID` as current user's environment va
 configuration. But you must restart Command Prompt or PowerShell after this to take effect.
 
 It can also be configured to run `ssh-agent.exe` at the time of Windows login and add ssh keys to it. You can use
-`/register-startup` switch for that.
+`--register-startup` or `-r` switch for that.
 
-E.g. `ssh-agent-helper.exe /register-startup /add %USERPROFILE%\.ssh\id_rsa`. And you can use
-`/unregister-startup` to disable run at Windows login.
+E.g. `ssh-agent-helper.exe -r -a %USERPROFILE%\.ssh\id_rsa`. And you can use
+`--unregister-startup` or `-u` to disable run at Windows login.
 
-You can get the usage by invoking the program with `/?` switch.
+You can get the usage by invoking the program with `--help` switch.
 
 ## How can I contribute?
 Try to use use and report bugs if you face any. Suggest any ideas you think can make this project better.
