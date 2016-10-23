@@ -94,7 +94,7 @@ namespace SSH_Agent_Helper
                 Console.Error.WriteLine("Another ssh-agent (PID: " + AgentPID + ") is already running healthily");
             } catch (Exception)
             {
-                string SSHAgentPath = FindProgram("ssh-agent");
+                string SSHAgentPath = FindProgram("ssh-agent.exe");
                 Process SSHAgent = new Process
                 {
                     StartInfo = new ProcessStartInfo
@@ -162,7 +162,7 @@ namespace SSH_Agent_Helper
                 Environment.Exit(1);
             }
 
-            string SSHAgentPath = FindProgram("ssh-agent");
+            string SSHAgentPath = FindProgram("ssh-agent.exe");
             Process SSHAgent = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -271,7 +271,7 @@ namespace SSH_Agent_Helper
 
         static void AddSSHKeys(IList<string> paths, bool customENV = false)
         {
-            string SSHAddPath = FindProgram("ssh-add");
+            string SSHAddPath = FindProgram("ssh-add.exe");
             Process SSHAdd = new Process
             {
                 StartInfo = new ProcessStartInfo
