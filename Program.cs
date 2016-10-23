@@ -21,7 +21,7 @@ namespace SSH_Agent_Helper
         static string AgentSock;
         static string AgentPID;
 
-        static void Main()
+        static void Main(string[] args)
         {
 
             AgentSock = Environment.GetEnvironmentVariable(SSH_AUTH_SOCK, EnvironmentVariableTarget.Process);
@@ -36,62 +36,37 @@ namespace SSH_Agent_Helper
             }
 
             String[] arguments = Environment.GetCommandLineArgs();
+            var options = new Options();
 
-            if (arguments.Length > 1)
+            if (CommandLine.Parser.Default.ParseArguments(args, options) && args.Length > 0)
             {
                 string[] switches = { };
-                if (arguments.Contains("/k"))
+                if (options.Kill)
                 {
                     killAgent();
-                } else if (arguments.Contains("/register-startup"))
+                } else if (options.RegisterStartup)
                 {
-                    if (arguments.Length > 2)
+                    if (options.Others.Count > 0)
                     {
-                        List<string> except = new List<string>();
-                        except.Add("/register-startup");
-                        List<string> tempList = arguments.ToList();
-                        tempList.Add("/startup");
-                        arguments = tempList.ToArray();
-                        manageStartup(arguments.Skip(1).Except(except).ToArray());
+                        options.Others.Add("-s");
+                        manageStartup(options.Others);
                     } else
                     {
-                        manageStartup(switches);
+                        manageStartup(new List<string>() { });
                     }
-                } else if (arguments.Contains("/unregister-startup"))
+                } else if (options.UnregisterRestartup)
                 {
                     manageStartup(switches, true);
-                } else if (arguments.Contains("/startup") && arguments.Contains("/add"))
+                } else if (options.Startup && options.Add)
                 {
-                    List<string> except = new List<string>();
-                    except.Add("/startup");
-                    except.Add("/add");
                     runAgent();
-                    addKeys(arguments.Skip(1).Except(except).ToArray(), true);
-                } else if (arguments.Contains("/add")) {
-                    List<string> except = new List<string>();
-                    except.Add("/add");
-                    addKeys(arguments.Skip(1).Except(except).ToArray());
-                } else
+                    addKeys(options.Others, true);
+                } else if (options.Add) {
+                    addKeys(options.Others);
+                }
+                else
                 {
-                    Console.Error.WriteLine("Usage: ssh-agent-helper.exe <switch>");
-                    Console.Error.WriteLine("");
-                    Console.Error.WriteLine("Possible switches:");
-                    Console.Error.WriteLine("--------------------------------------------");
-                    Console.Error.WriteLine("/register-startup \"parameters for startup\":   " +
-                                        "Register this program to run at Windows Startup." +
-                                        " Parameters for");
-                    Console.Error.WriteLine("                                              " +
-                                        "startup are optional. E.g.: ");
-                    Console.Error.WriteLine("                                              " +
-                                        "ssh-agent-helper.exe /register-startup /add %USERPROFILE%\\.ssh\\id_rsa");
-                    Console.Error.WriteLine("");
-                    Console.Error.WriteLine("/unregister-startup :                         " +
-                                        "Disable run at Windows Startup behaviour.");
-                    Console.Error.WriteLine("/add \"path\" :                                 " +
-                                        "Start the ssh-agent and add the key located at \"path\" to it");
-                    Console.Error.WriteLine("/k :                                          " +
-                                        "Kill the current ssh-agent process and unset environment variables.");
-                    Console.Error.WriteLine("/? :                                          Print this information.");
+                    Console.Write(options.GetUsage());
                     Environment.Exit(1);
                 }
                 Environment.Exit(0);
@@ -258,23 +233,14 @@ namespace SSH_Agent_Helper
             }
         }
 
-        static void manageStartup(string[] args, bool remove = false)
+        static void manageStartup(IList<string> args, bool remove = false)
         {
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
                     (@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
             if (!remove)
             {
                 string parameter = (new Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)).LocalPath;
-                if (args.Length > 0)
-                {
-
-                    string argument = "";
-                    for (int i = 0; i < args.Length; i++) {
-                        argument += " \"" + args[i] + "\"";
-                    }
-                    parameter = "\"" + parameter + "\"" + argument;
-                }
-                registryKey.SetValue("SSH Agent Helper", parameter);
+                registryKey.SetValue("SSH Agent Helper", parameter + " " + String.Join(" ", args));
 
                 Console.WriteLine("SSH Agent Helper has been register to run at Startup with these parameters: " +
                                     String.Join(" ", parameter));
@@ -289,7 +255,7 @@ namespace SSH_Agent_Helper
             }
         }
 
-        static void addKeys(string[] paths, bool customENV = false)
+        static void addKeys(IList<string> paths, bool customENV = false)
         {
             string SSHAddPath = findProgram("ssh-add");
             Process SSHAdd = new Process
