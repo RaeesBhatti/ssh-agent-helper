@@ -308,7 +308,7 @@ namespace SSH_Agent_Helper
                 {
                     return (string)Where.StandardOutput.ReadLine();
                 }
-                throw new Exception(name + ".exe was not found in %PATH%");
+                throw new Exception(name + " was not found in %PATH%");
             }
             catch (Exception e)
             {
