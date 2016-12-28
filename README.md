@@ -9,16 +9,14 @@ Windows environment. Which means that you can use your precious `ssh` and `git` 
 or PowerShell.
 
 ## Usage
-Invoking the program without any parameters (`ssh-agent-helper.exe`) will result in running `ssh-agent`
+Download the binary from [latest release](https://github.com/raeesbhatti/ssh-agent-helper/releases/latest).
+* `ssh-agent-helper.exe`: Invoking the program without any parameters will result in running `ssh-agent`
 and setting `SSH_AUTH_SOCK` and `SSH_AGENT_PID` as current user's environment variables. This will allow
 `ssh-add`, `ssh` or any other programs that consume `ssh-agent` to conect to it without any further
 configuration. But you must restart Command Prompt or PowerShell after this to take effect.
-
-It can also be configured to run `ssh-agent` at the time of Windows startup and add ssh keys to it. You can use
-`--register-startup` or `-r` switch for that.
-
-E.g. `ssh-agent-helper.exe -r -a %USERPROFILE%\.ssh\id_rsa`. And you can use `--unregister-startup` or `-u`
-to disable run at Windows startup.
+* `ssh-agent-helper.exe` with `--register-startup` or `-r` parameter configures `ssh-agent` to run at the time of Windows startup.
+* `ssh-agent-helper.exe` with `-r -a (path for (multiple) id_rsa here)` configures `ssh-agent` to run at Windows startup and add specified SSH keys to the agent. E.g.`ssh-agent-helper.exe -r -a %USERPROFILE%\.ssh\id_rsa`
+* `ssh-agent-helper.exe` with `--unregister-startup` or `-u` will disable run at Windows startup functionality.
 
 You can get the usage information by invoking the program with `--help` switch.
 
