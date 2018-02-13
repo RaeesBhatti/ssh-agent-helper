@@ -2,8 +2,8 @@
 It sets up your environment (CMD, PowerShell) for ssh-agent seamlessly
 
 ## What does it fix?
-In a world before this program, if you wanted to use `ssh` or `git` from Command Prompt or PowerShell,you either
-had to use startup scripts for the terminals or set the SSH agent variables manually on each instance
+In a world before this program, if you wanted to use `ssh` or `git` (using ssh keys) from Command Prompt or PowerShell,
+you either had to use startup scripts for the terminals or set the `ssh-agent` variables manually on each instance
 of terminals. This program just simply make `ssh-agent` universally available to programs launched from
 Windows environment. Which means that you can use your precious `ssh` and `git` right from Command Prompt
 or PowerShell.
