@@ -1,12 +1,12 @@
 # SSH Agent Helper
-It sets up your environment (CMD, PowerShell) for ssh-agent seamlessly
+Use SSH keys from CMD, PowerShell, etc. on Windows
 
 ## What does it fix?
-In a world before this program, if you wanted to use `ssh` (or `git` authenticated via ssh keys) from Command Prompt
-or PowerShell, you either had to use startup scripts for the terminals or set the `ssh-agent` variables manually
+If you want to use `ssh` with SSH keys (or `git` authenticated via SSH keys) from Command Prompt (`cmd`)
+or PowerShell, you either have to use startup scripts for the terminals or set the `ssh-agent` variables manually
 on each instance. This program just simply make `ssh-agent` universally available to programs launched from
-Windows environment. Which means that you can use your precious `ssh` and `git` right from Command Prompt, PowerShell,
-Bash or any other.
+Windows environment. Which means that you can use do `ssh-add` to add keys that will be available in all terminals.
+And use your precious `ssh` and `git` right from Command Prompt, PowerShell, Bash or any other.
 
 ## Usage
 Download the binary from [latest release](https://github.com/raeesbhatti/ssh-agent-helper/releases/latest).
